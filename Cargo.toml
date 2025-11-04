@@ -1,0 +1,36 @@
+[package]
+name = "serial-async-debug"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.86"
+
+[dependencies]
+esp-bootloader-esp-idf = { version = "0.2.0", features = ["esp32c3"] }
+esp-hal = { version = "1.0.0-rc.1", features = ["esp32c3", "unstable", "log-04"] }
+esp-hal-procmacros = "0.21.0"
+esp-println = { version = "0.16.0", features = ["esp32c3", "log-04"] }
+esp-backtrace = { version = "0.18.0", features = ["esp32c3", "halt-cores", "println"], default-features = false }
+critical-section = "1.2.0"
+log = "0.4.27"
+nb = "1.1.0"
+riscv-rt = "0.16.0"
+
+# Patch esp-rs crates to use git versions
+[patch.crates-io]
+esp-hal = { git = "https://github.com/esp-rs/esp-hal" }
+esp-backtrace = { git = "https://github.com/esp-rs/esp-hal" }
+esp-println = { git = "https://github.com/esp-rs/esp-hal" }
+esp-riscv-rt = { git = "https://github.com/esp-rs/esp-hal" }
+esp-rom-sys = { git = "https://github.com/esp-rs/esp-hal" }
+
+[profile.dev]
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1
+strip = 'debuginfo'
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
